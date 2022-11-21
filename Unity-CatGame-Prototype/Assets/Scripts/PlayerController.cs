@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform bombArea;
     [SerializeField] private GameObject bomb;
     [SerializeField] private float bombRatio;
+    [SerializeField] private int bombAmount;
     //[SerializeField] private Transform bombPosition;
     //[SerializeField] private Transform bomb;
 
@@ -32,17 +33,21 @@ public class PlayerController : MonoBehaviour
         GatherInput();
         Look();
 
-        if (Input.GetKeyDown(KeyCode.L)) Aim();
-        if (Input.GetKeyUp(KeyCode.L)) Shoot();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (bombAmount > 0)
         {
-            if (Input.GetKey(KeyCode.L))
+            if (Input.GetKeyDown(KeyCode.L)) Aim();
+            if (Input.GetKeyUp(KeyCode.L)) Shoot();
+
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                isAiming = false;
-                bombArea.gameObject.SetActive(false);
+                if (Input.GetKey(KeyCode.L))
+                {
+                    isAiming = false;
+                    bombArea.gameObject.SetActive(false);
+                }
             }
         }
+
     }
     private void FixedUpdate()
     {
@@ -75,6 +80,8 @@ public class PlayerController : MonoBehaviour
     private void Shoot()
     {
         if (!isAiming) return;
+        if (bombAmount <= 0) return;
+
 
         bombArea.gameObject.SetActive(false);
         bombArea.GetComponent<SpriteRenderer>().color = Color.red;
@@ -84,5 +91,8 @@ public class PlayerController : MonoBehaviour
 
         newBomb.bombRatio = bombRatio;
         newBomb.bombLayer = bombLayer;
+
+        GameController.Instance.UpdateBombPanel(bombAmount - 1, false);
+        bombAmount--;
     }
 }

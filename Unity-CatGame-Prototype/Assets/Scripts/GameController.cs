@@ -18,6 +18,11 @@ public class GameController : MonoBehaviour
     private int totalScore;
     private float amountPerMatch;
 
+    [Space(10)]
+    [SerializeField] private Sprite bombEmpty;
+    [SerializeField] private Sprite bombFilled;
+    [SerializeField] private Image[] bombIcon;
+
     private void Awake()
     {
         if (Instance == null)
@@ -172,5 +177,16 @@ public class GameController : MonoBehaviour
 
         txtTotalScore.text = $"Total score: {this.totalScore}";
         txtPairScore.text = $"Perfect pair: {totalScore}";
+    }
+    public void UpdateBombPanel(int index, bool value)
+    {
+        if (value)
+        {
+            bombIcon[index].sprite = bombFilled;
+        }
+        else
+        {
+            bombIcon[index].sprite = bombEmpty;
+        }
     }
 }
