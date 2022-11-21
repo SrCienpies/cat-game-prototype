@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [Space(10)]
     [SerializeField] private LayerMask bombLayer;
     [SerializeField] private Transform bombArea;
+    [SerializeField] private GameObject bomb;
     [SerializeField] private float bombRatio;
     //[SerializeField] private Transform bombPosition;
     //[SerializeField] private Transform bomb;
@@ -33,6 +34,15 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L)) Aim();
         if (Input.GetKeyUp(KeyCode.L)) Shoot();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Input.GetKey(KeyCode.L))
+            {
+                isAiming = false;
+                bombArea.gameObject.SetActive(false);
+            }
+        }
     }
     private void FixedUpdate()
     {
@@ -70,14 +80,9 @@ public class PlayerController : MonoBehaviour
         bombArea.GetComponent<SpriteRenderer>().color = Color.red;
         isAiming = false;
 
-        Collider[] matchs = Physics.OverlapSphere(transform.position, bombRatio/2, bombLayer);
+        LoveBomb newBomb =  Instantiate(bomb, bombArea.position, Quaternion.identity).GetComponent<LoveBomb>();
 
-        if (matchs.Length > 1)
-        {
-            CatEntitie catA = matchs[0].gameObject.GetComponent<CatEntitie>();
-            CatEntitie catB = matchs[1].gameObject.GetComponent<CatEntitie>();
-
-            GameController.Instance.PerfectPairing(catA, catB);
-        }
+        newBomb.bombRatio = bombRatio;
+        newBomb.bombLayer = bombLayer;
     }
 }

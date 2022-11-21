@@ -1,13 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [DefaultExecutionOrder(-100)]
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
 
-    public string[] interest;
+    public Text txtPairScore;
+    public Text txtTotalScore;
+
+    [Space(10)]
+    public int totalMatches;
+    public Image imgGoodBar;
+    public Image imgEvilBar;
+
+    private int totalScore;
+    private float amountPerMatch;
 
     private void Awake()
     {
@@ -19,6 +28,14 @@ public class GameController : MonoBehaviour
         {
             Destroy(this);
         }
+
+        imgGoodBar.fillAmount = 0;
+        imgEvilBar.fillAmount = 0;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R)) SceneManager.LoadScene(0);
     }
 
     public void PerfectPairing(CatEntitie catA, CatEntitie catB)
@@ -66,7 +83,7 @@ public class GameController : MonoBehaviour
                     score = -1;
                     break;
                 case "B0B1":
-                    score = -21;
+                    score = -2;
                     break;
                 case "B0C1":
                     score = -1;
@@ -135,9 +152,25 @@ public class GameController : MonoBehaviour
                     break;
             }
 
+            Debug.Log($"{code}: {score}");
+
             totalScore += score;
         }
 
-        Debug.Log($"TOTAL POINTS: {totalScore}");
+        if(totalScore > 0)
+        {
+            imgGoodBar.fillAmount += (1 / (float) totalMatches);
+        }
+        else if(totalScore < 0)
+        {
+            imgEvilBar.fillAmount += (1 / (float) totalMatches);
+        }
+
+        //===============================================
+
+        this.totalScore += Mathf.Abs(totalScore);
+
+        txtTotalScore.text = $"Total score: {this.totalScore}";
+        txtPairScore.text = $"Perfect pair: {totalScore}";
     }
 }
