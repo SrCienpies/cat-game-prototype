@@ -47,16 +47,16 @@ public class GameController : MonoBehaviour
     {
         int totalScore = 0;
 
-        for (int i = 0; i < catA.interest.Length; i++)
+        for (int i = 0; i < catA.lstInterests.Length; i++)
         {
             int score = 0;
 
-            Interest intA = catA.lstInterests[i];
-            Interest intB = catB.lstInterests[i];
+            SO_Interest intA = catA.lstInterests[i];
+            SO_Interest intB = catB.lstInterests[i];
 
-            if(intA.interest == intB.interest)
+            if (intA.group == intB.group)
             {
-                if(intA.like == intB.like)
+                if(intA.type == intB.type)
                 {
                     score = +2;
                 }
@@ -67,7 +67,7 @@ public class GameController : MonoBehaviour
             }
             else
             {
-                if (intA.like == intB.like)
+                if (intA.type == intB.type)
                 {
                     score = +1;
                 }

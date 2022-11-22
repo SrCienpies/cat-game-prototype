@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5260972269892812898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1495449495783360681}
+  m_Layer: 6
+  m_Name: Waypoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1495449495783360681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5260972269892812898}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9110895323410621217}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5908796019007076106
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,6 +501,7 @@ Transform:
   m_Children:
   - {fileID: 9110895322635917762}
   - {fileID: 5919853784045921164}
+  - {fileID: 1495449495783360681}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -564,10 +595,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a3ebc0f10c8f8149afa50e03d560260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interest:
-  - A0
-  - B0
-  - C0
+  lstInterests: []
+  sprInterest:
+  - {fileID: 9110895322552200987}
+  - {fileID: 9110895321651855302}
+  - {fileID: 9110895323621839893}
+  loop: 0
+  speed: 5
+  rate: 1.5
+  waypoints: {fileID: 1495449495783360681}
 --- !u!1 &9110895323621839899
 GameObject:
   m_ObjectHideFlags: 0
