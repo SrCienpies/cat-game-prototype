@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R)) SceneManager.LoadScene(0);
     }
 
-    public void PerfectPairing(CatEntitie catA, CatEntitie catB)
+    public void PerfectPairing(CatEntity catA, CatEntity catB)
     {
         int totalScore = 0;
 

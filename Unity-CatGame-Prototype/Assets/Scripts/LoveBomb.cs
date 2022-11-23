@@ -11,8 +11,8 @@ public class LoveBomb : MonoBehaviour
 
         if (matchs.Length > 1)
         {
-            CatEntitie catA = matchs[0].gameObject.GetComponent<CatEntitie>();
-            CatEntitie catB = matchs[1].gameObject.GetComponent<CatEntitie>();
+            CatEntity catA = matchs[0].gameObject.GetComponent<CatEntity>();
+            CatEntity catB = matchs[1].gameObject.GetComponent<CatEntity>();
 
             GameController.Instance.PerfectPairing(catA, catB);
 

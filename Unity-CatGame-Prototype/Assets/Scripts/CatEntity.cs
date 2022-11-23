@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class CatEntitie : MonoBehaviour
+public class CatEntity : MonoBehaviour
 {
     public SO_Interest[] lstInterests;
     public SpriteRenderer[] sprInterest;
@@ -19,6 +19,7 @@ public class CatEntitie : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log(name);
         waypointPositions = new Vector3[waypoints.childCount];
 
         for (int i = 0; i < waypoints.childCount; i++)
@@ -26,14 +27,10 @@ public class CatEntitie : MonoBehaviour
             Transform waypoint = waypoints.GetChild(i);
 
             waypointPositions[i] = waypoint.position;
-
-            //waypoint.parent = null;
-            //waypoint.gameObject.SetActive(false);
         }
 
-        //transform.position = waypointPositions[idxWaypoint];
         isMoving = true;
-        StartCoroutine(RoutineMove());
+        StartCoroutine("RoutineMove");
 
         for (int i = 0; i < lstInterests.Length; i++)
         {
@@ -41,25 +38,19 @@ public class CatEntitie : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void MoveToposition(Vector3 toPosition)
     {
-        //Move();
+        float distance = Vector3.Distance(transform.position, toPosition);
+
+        //if(toPosition - transform.position != Vector3.zero) transform.forward = toPosition - transform.position;
+
+        transform.position = Vector3.MoveTowards(transform.position, toPosition, speed * Time.deltaTime);
+
+        //if(toPosition - transform.position != Vector3.zero)
+        //{
+        //    if(Vector3.Distance(transform.position, toPosition))
+        //}
     }
-    private void Move()
-    {
-        if (waypoints.childCount == 0) return;
-
-        transform.forward = waypointPositions[idxWaypoint] - transform.position;
-        transform.position = Vector3.MoveTowards(transform.position, waypointPositions[idxWaypoint], speed * Time.deltaTime);
-
-        if (transform.position == waypointPositions[idxWaypoint]) idxWaypoint++;
-
-        if(idxWaypoint == waypointPositions.Length)
-        {
-            idxWaypoint = 0;
-        }
-    }
-
     private IEnumerator RoutineMove()
     {
         if (waypoints.childCount == 0) yield break;
@@ -92,11 +83,26 @@ public class CatEntitie : MonoBehaviour
         }
     }
 
+    public void StartMovement()
+    {
+        if (isMoving) return;
+
+        isMoving = true;
+        StartCoroutine("RoutineMove");
+    }
+    public void StopMovement()
+    {
+        if (!isMoving) return;
+
+        isMoving = false;
+        StopCoroutine("RoutineMove");
+    }
+
     private void OnDrawGizmos()
     {
         if (Application.isPlaying) return;
 
-        if (waypoints.childCount > 0 && waypoints != null)
+        if (waypoints != null)
         {
             for (int i = 0; i < waypoints.childCount - 1; i++)
             {
@@ -104,11 +110,6 @@ public class CatEntitie : MonoBehaviour
                 Gizmos.DrawLine(waypoints.GetChild(i).position, waypoints.GetChild(i + 1).position);
             }
         }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-
     }
 }
 
