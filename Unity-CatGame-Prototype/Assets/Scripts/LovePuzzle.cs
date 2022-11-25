@@ -1,11 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LovePuzzle : MonoBehaviour
 {
     public Transform obj;
+    public SO_Interest interest;
+    public GameObject indicator;
 
     [Space(5)]
+    public float timer;
     public float minDistance;
     public float ratioInteractable;
     public float ratioEffect;
@@ -29,6 +33,7 @@ public class LovePuzzle : MonoBehaviour
         sprAreaEffect.transform.localScale = Vector2.one * ratioEffect;
 
         sprAreaEffect.gameObject.SetActive(false);
+        indicator.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -53,6 +58,7 @@ public class LovePuzzle : MonoBehaviour
                 }
                 else
                 {
+                    StartCoroutine("Counter");
                     active = true;
                     sprAreaEffect.gameObject.SetActive(true);
                 }
@@ -72,16 +78,32 @@ public class LovePuzzle : MonoBehaviour
                     Vector3 direction = transform.position - cat.transform.position;
                     Vector3 nearPos = transform.position - direction.normalized * minDistance;
 
+                    if (cat.lstInterests.Contains(interest))
+                    {
+                        Debug.DrawLine(transform.position, nearPos, Color.black);
 
-
-                    Debug.DrawLine(transform.position, nearPos, Color.black);
-
-                    cat.StopMovement();
-                    cat.MoveToposition(nearPos);
-
-                    //lstCats.Add(cat);
+                        cat.StopMovement();
+                        cat.MoveToposition(nearPos);
+                    }
                 }
             }
+        }
+    }
+
+    private IEnumerator Counter()
+    {
+        yield return new WaitForSeconds(timer);
+
+        active = false;
+        sprAreaEffect.gameObject.SetActive(false);
+
+        Collider[] cats = Physics.OverlapSphere(transform.position, ratioEffect / 2, layerEffect);
+
+        for (int i = 0; i < cats.Length; i++)
+        {
+            CatEntity cat = cats[i].GetComponent<CatEntity>();
+
+            cat.StartMovement();
         }
     }
 
@@ -89,7 +111,7 @@ public class LovePuzzle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            obj.localScale = Vector3.one * 1.5f;
+            indicator.gameObject.SetActive(true);
             onArea = true;
         }
     }
@@ -97,7 +119,7 @@ public class LovePuzzle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            obj.localScale = Vector3.one * 1.0f;
+            indicator.gameObject.SetActive(false);
             onArea = false;
         }
     }

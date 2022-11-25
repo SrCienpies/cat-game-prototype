@@ -7,10 +7,11 @@ public class Billboard : MonoBehaviour
     private void Start()
     {
         transform.parent = null;
+        transform.rotation = Quaternion.Euler(0, 45, 0);
     }
 
     void Update()
     {
-        transform.position = target.position;
+        transform.position = new Vector3(target.position.x, transform.position.y, target.position.z);
     }
 }

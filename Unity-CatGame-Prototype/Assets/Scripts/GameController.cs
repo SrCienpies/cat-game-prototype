@@ -1,11 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 [DefaultExecutionOrder(-100)]
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
+
+    public SO_Interest[] interests;
 
     public Text txtPairScore;
     public Text txtTotalScore;
@@ -47,7 +50,7 @@ public class GameController : MonoBehaviour
     {
         int totalScore = 0;
 
-        for (int i = 0; i < catA.lstInterests.Length; i++)
+        for (int i = 0; i < catA.lstInterests.Count; i++)
         {
             int score = 0;
 
@@ -78,115 +81,6 @@ public class GameController : MonoBehaviour
             }
 
             totalScore += score;
-            //if (catA.interest[i] == catB.interest[i])
-            //{
-            //    Debug.Log("Perfect Match");
-            //    score = +2;
-            //    totalScore += score;
-            //    break;
-            //}
-
-            //string code = catA.interest[i] + catB.interest[i];
-
-            //switch (code)
-            //{
-            //    case "A0B0":
-            //        score = +1;
-            //        break;
-            //    case "A0C0":
-            //        score = +1;
-            //        break;
-            //    case "A0A1":
-            //        score = -2;
-            //        break;
-            //    case "A0B1":
-            //        score = -1;
-            //        break;
-            //    case "A0C1":
-            //        score = -1;
-            //        break;
-            //    case "B0A0":
-            //        score = +1;
-            //        break;
-            //    case "B0C0":
-            //        score = +1;
-            //        break;
-            //    case "B0A1":
-            //        score = -1;
-            //        break;
-            //    case "B0B1":
-            //        score = -2;
-            //        break;
-            //    case "B0C1":
-            //        score = -1;
-            //        break;
-            //    case "C0A0":
-            //        score = +1;
-            //        break;
-            //    case "C0B0":
-            //        score = +1;
-            //        break;
-            //    case "C0A1":
-            //        score = -1;
-            //        break;
-            //    case "C0B1":
-            //        score = -1;
-            //        break;
-            //    case "C0C1":
-            //        score = -2;
-            //        break;
-            //    case "A1A0":
-            //        score = -2;
-            //        break;
-            //    case "A1B0":
-            //        score = -1;
-            //        break;
-            //    case "A1C0":
-            //        score = -1;
-            //        break;
-            //    case "A1B1":
-            //        score = +1;
-            //        break;
-            //    case "A1C1":
-            //        score = +1;
-            //        break;
-            //    case "B1A0":
-            //        score = -1;
-            //        break;
-            //    case "B1B0":
-            //        score = -2;
-            //        break;
-            //    case "B1C0":
-            //        score = -1;
-            //        break;
-            //    case "B1A1":
-            //        score = +1;
-            //        break;
-            //    case "B1C1":
-            //        score = +1;
-            //        break;
-            //    case "C1A0":
-            //        score = -1;
-            //        break;
-            //    case "C1B0":
-            //        score = -1;
-            //        break;
-            //    case "C1C0":
-            //        score = -2;
-            //        break;
-            //    case "C1A1":
-            //        score = +1;
-            //        break;
-            //    case "C1B1":
-            //        score = +1;
-            //        break;
-            //    default:
-            //        break;
-            //}
-
-            //Debug.Log($"{code}: {score}");
-
-            //totalScore += score;
         }
 
         if(totalScore > 0)
@@ -202,6 +96,9 @@ public class GameController : MonoBehaviour
 
         this.totalScore += Mathf.Abs(totalScore);
 
+        totalScore += catA.extraScore;
+        totalScore += catB.extraScore;
+
         txtTotalScore.text = $"Total score: {this.totalScore}";
         txtPairScore.text = $"Perfect pair: {totalScore}";
     }
@@ -214,6 +111,35 @@ public class GameController : MonoBehaviour
         else
         {
             bombIcon[index].sprite = bombEmpty;
+        }
+    }
+}
+
+public static class Extensions
+{
+    public static void Shuffle<T>(this List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            T temp = list[i];
+
+            int rand = UnityEngine.Random.Range(i, list.Count);
+            list[i] = list[rand];
+
+            list[rand] = temp;
+        }
+    }
+
+    public static void Shuffle<T>(this T[] array)
+    {
+        for (int i = 0; i < array.Length; i++)
+        {
+            T temp = array[i];
+
+            int rand = UnityEngine.Random.Range(i, array.Length);
+            array[i] = array[rand];
+
+            array[rand] = temp;
         }
     }
 }

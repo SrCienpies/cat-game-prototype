@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CatEntity : MonoBehaviour
 {
-    public SO_Interest[] lstInterests;
+    public List<SO_Interest> lstInterests;
     public SpriteRenderer[] sprInterest;
 
     [Space(10)]
@@ -17,6 +18,8 @@ public class CatEntity : MonoBehaviour
     private int idxWaypoint = 0;
     private bool isMoving;
 
+    public bool hasPlayer;
+    public int extraScore;
     private void Start()
     {
         Debug.Log(name);
@@ -32,7 +35,7 @@ public class CatEntity : MonoBehaviour
         isMoving = true;
         StartCoroutine("RoutineMove");
 
-        for (int i = 0; i < lstInterests.Length; i++)
+        for (int i = 0; i < lstInterests.Count; i++)
         {
             sprInterest[i].sprite = lstInterests[i].icon;
         }
@@ -96,6 +99,25 @@ public class CatEntity : MonoBehaviour
 
         isMoving = false;
         StopCoroutine("RoutineMove");
+    }
+    public void TargetPlayer()
+    {
+        extraScore--;
+
+        SO_Interest[] aux = GameController.Instance.interests;
+
+        aux.Shuffle();
+
+        lstInterests = new List<SO_Interest>();
+
+        lstInterests.Add(aux[0]);
+        lstInterests.Add(aux[1]);
+        lstInterests.Add(aux[2]);
+
+        for (int i = 0; i < lstInterests.Count; i++)
+        {
+            sprInterest[i].sprite = lstInterests[i].icon;
+        }
     }
 
     private void OnDrawGizmos()
