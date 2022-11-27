@@ -5,18 +5,45 @@ public class LoveBomb : MonoBehaviour
     public float bombRatio;
     public LayerMask bombLayer;
 
+    private int catAmount;
+
+    private CatEntity catA;
+    private CatEntity catB;
+
     private void Update()
     {
         Collider[] matchs = Physics.OverlapSphere(transform.position, bombRatio / 2, bombLayer);
 
         if (matchs.Length > 1)
         {
-            CatEntity catA = matchs[0].gameObject.GetComponent<CatEntity>();
-            CatEntity catB = matchs[1].gameObject.GetComponent<CatEntity>();
+            for (int i = 0; i < matchs.Length; i++)
+            {
+                CatEntity cat = matchs[i].gameObject.GetComponent<CatEntity>();
 
-            GameController.Instance.PerfectPairing(catA, catB);
+                if (cat.matchEnable)
+                {
+                    catAmount++;
 
-            Destroy(gameObject);
+                    if(catAmount == 1)
+                    {
+                        catA = cat;
+                    }
+                    if (catAmount == 2)
+                    {
+                        catB = cat;
+                    }
+
+                }
+
+                if (catAmount == 2)
+                {
+                    GameController.Instance.PerfectPairing(catA, catB);
+                    Destroy(gameObject);
+                    break;
+                }
+            }
+
+
         }
     }
 }

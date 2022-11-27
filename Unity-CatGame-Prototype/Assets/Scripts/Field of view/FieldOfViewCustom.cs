@@ -75,6 +75,8 @@ public class FieldOfViewCustom : MonoBehaviour
 
     void Update()
     {
+        if (!cat.matchEnable) return;
+
         int definition = 10;
         float amtSegment = width / (float)definition;
 
@@ -124,7 +126,6 @@ public class FieldOfViewCustom : MonoBehaviour
             {
                 cat.TargetPlayer();
                 cat.hasPlayer = true;
-                Debug.Log("Player Targeted, Punishment: " + cat.extraScore);
             }
         }
         else
@@ -133,21 +134,11 @@ public class FieldOfViewCustom : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    public void DisableFieldOfView()
     {
-        //float zValue = (lenght / 2) + 0.5f;
-
-        //Vector3 center = new Vector3(transform.position.x, transform.position.y, zValue + transform.position.z);
-        //Vector3 size = new Vector3(width, 1, lenght);
-
-        //Color c = Color.cyan;
-        //c.a = 0.2f;
-        //Gizmos.color = c;
-        //Gizmos.DrawCube(center, size);
-
-        //======================================0
-        //Gizmos.color = Color.black;
-        //Vector2 dir = transform.position - transform.forward;
-        //Gizmos.DrawRay(transform.position, transform.forward * 2);
+        for (int i = 0; i < lines.Length; i++)
+        {
+            lines[i].gameObject.SetActive(false);
+        }
     }
 }

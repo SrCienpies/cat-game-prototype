@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 2076206422378553067}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -0.4999, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 1.75}
+  m_LocalScale: {x: 7, y: 7, z: 0}
   m_Children: []
   m_Father: {fileID: 2076206423726451786}
   m_RootOrder: 2
@@ -103,7 +103,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 1, g: 0.2117647, b: 0.94706315, a: 0.2}
+  m_Color: {r: 0.4009434, g: 0.5879155, b: 1, a: 0.25}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -139,7 +139,7 @@ Transform:
   m_GameObject: {fileID: 2076206422397065149}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -0.4999, z: 0}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 0}
   m_Children: []
   m_Father: {fileID: 2076206423726451786}
   m_RootOrder: 1
@@ -185,7 +185,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 1, g: 0.2117647, b: 0.94706315, a: 0.34901962}
+  m_Color: {r: 0.4009434, g: 0.5879155, b: 1, a: 0.5}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -286,7 +286,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c34a6f1d7ac311a4e8483774cf56815a, type: 2}
+  - {fileID: 2100000, guid: c23b3353b2355f948a42b2500ed2cc3a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -371,7 +371,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obj: {fileID: 2076206423315179303}
-  interest: {fileID: 11400000, guid: afc4c2df363a68847823cb90fcb2ae32, type: 2}
+  interest: 0
+  indicator: {fileID: 197065980852883611}
+  material: {fileID: 2100000, guid: c23b3353b2355f948a42b2500ed2cc3a, type: 2}
+  mesh: {fileID: 2076206423676719220}
   timer: 300
   minDistance: 2
   ratioInteractable: 3.5

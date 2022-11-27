@@ -5,8 +5,13 @@ using UnityEngine;
 public class LovePuzzle : MonoBehaviour
 {
     public Transform obj;
-    public SO_Interest interest;
+    public InterestGroup interest;
     public GameObject indicator;
+
+    [Space(10)]
+    [Header("Mesh")]
+    public Material material;
+    public MeshRenderer mesh;
 
     [Space(5)]
     public float timer;
@@ -25,6 +30,27 @@ public class LovePuzzle : MonoBehaviour
     private bool onArea;
     private bool active;
 
+    private void OnValidate()
+    {
+        if (material && mesh) mesh.material = material;
+
+        if (material && sprAreaInteract && sprAreaEffect)
+        {
+            Color clInteractable = material.color;
+            Color clEffect = material.color;
+
+            clInteractable.a = 0.5f;
+            clEffect.a = 0.25f;
+
+            sprAreaInteract.color = clInteractable;
+            sprAreaEffect.color = clEffect;
+        }
+
+        if (sprAreaInteract) sprAreaInteract.transform.localScale = Vector2.one * ratioInteractable;
+        if (sprAreaEffect) sprAreaEffect.transform.localScale = Vector2.one * ratioEffect;
+
+    }
+
     private void Awake()
     {
         GetComponent<SphereCollider>().radius = ratioInteractable / 2;
@@ -35,6 +61,8 @@ public class LovePuzzle : MonoBehaviour
         sprAreaEffect.gameObject.SetActive(false);
         indicator.gameObject.SetActive(false);
     }
+
+
 
     private void Update()
     {
@@ -53,6 +81,7 @@ public class LovePuzzle : MonoBehaviour
                     {
                         CatEntity cat = cats[i].GetComponent<CatEntity>();
 
+                        cat.StopMoveTo();
                         cat.StartMovement();
                     }
                 }
@@ -75,15 +104,14 @@ public class LovePuzzle : MonoBehaviour
                 {
                     CatEntity cat = cats[i].GetComponent<CatEntity>();
 
-                    Vector3 direction = transform.position - cat.transform.position;
-                    Vector3 nearPos = transform.position - direction.normalized * minDistance;
-
-                    if (cat.lstInterests.Contains(interest))
+                    if (cat.lstInterests.Exists((x)=> x.group == interest))
                     {
-                        Debug.DrawLine(transform.position, nearPos, Color.black);
+                        Vector3 direction = transform.position - cat.transform.position;
+                        Vector3 nearPos = transform.position - direction.normalized * minDistance;
 
                         cat.StopMovement();
-                        cat.MoveToposition(nearPos);
+                        cat.StartMoveTo(nearPos);
+                        //cat.MoveToposition(nearPos);
                     }
                 }
             }
@@ -103,6 +131,7 @@ public class LovePuzzle : MonoBehaviour
         {
             CatEntity cat = cats[i].GetComponent<CatEntity>();
 
+            cat.StopMoveTo();
             cat.StartMovement();
         }
     }

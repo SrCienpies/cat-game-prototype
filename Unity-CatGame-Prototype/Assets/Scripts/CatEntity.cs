@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,9 +19,27 @@ public class CatEntity : MonoBehaviour
 
     public bool hasPlayer;
     public int extraScore;
+
+    [Space(5)]
+    public FieldOfViewCustom fov;
+    public TextMesh txtPunishment;
+
+    [Space(5)]
+    public GameObject popInterests;
+    public ParticleSystem partLove;
+    public ParticleSystem partToxic;
+
+    private IEnumerator _routineMoveTo;
+    private bool isMovingTo;
+
+    [HideInInspector] public bool matchEnable;
     private void Start()
     {
-        Debug.Log(name);
+        partLove.gameObject.SetActive(false);
+        partToxic.gameObject.SetActive(false);
+
+        matchEnable = true;
+
         waypointPositions = new Vector3[waypoints.childCount];
 
         for (int i = 0; i < waypoints.childCount; i++)
@@ -45,22 +62,20 @@ public class CatEntity : MonoBehaviour
     {
         float distance = Vector3.Distance(transform.position, toPosition);
 
-        //if(toPosition - transform.position != Vector3.zero) transform.forward = toPosition - transform.position;
+        Vector3 targetPos = new Vector3(toPosition.x, 0, toPosition.z);
 
-        transform.position = Vector3.MoveTowards(transform.position, toPosition, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime); 
 
-        //if(toPosition - transform.position != Vector3.zero)
-        //{
-        //    if(Vector3.Distance(transform.position, toPosition))
-        //}
+        if (toPosition - transform.position != Vector3.zero) transform.forward = targetPos - transform.position;
     }
     private IEnumerator RoutineMove()
     {
         if (waypoints.childCount == 0) yield break;
-
+         
         while (isMoving)
         {
-            transform.forward = waypointPositions[idxWaypoint] - transform.position;
+            if(waypointPositions[idxWaypoint] - transform.position != Vector3.zero) transform.forward = waypointPositions[idxWaypoint] - transform.position;
+
             transform.position = Vector3.MoveTowards(transform.position, waypointPositions[idxWaypoint], speed * Time.deltaTime);
 
             if (transform.position == waypointPositions[idxWaypoint])
@@ -85,7 +100,34 @@ public class CatEntity : MonoBehaviour
             yield return null;
         }
     }
+    public IEnumerator RoutineNoveTo(Vector3 toPosition)
+    {
+        while(true)
+        {
+            Vector3 targetPos = new Vector3(toPosition.x, 0, toPosition.z);
 
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+
+            if (toPosition - transform.position != Vector3.zero) transform.forward = targetPos - transform.position;
+
+            yield return new WaitForEndOfFrame();
+        }
+
+
+    }
+    public void StartMoveTo(Vector3 position)
+    {
+        if (isMovingTo) return;
+
+        isMovingTo = true;
+        _routineMoveTo = RoutineNoveTo(position);
+        StartCoroutine(_routineMoveTo);
+    }
+    public void StopMoveTo()
+    {
+        isMovingTo = false;
+        StopCoroutine(_routineMoveTo);
+    }
     public void StartMovement()
     {
         if (isMoving) return;
@@ -118,6 +160,36 @@ public class CatEntity : MonoBehaviour
         {
             sprInterest[i].sprite = lstInterests[i].icon;
         }
+
+        txtPunishment.transform.parent.gameObject.SetActive(true);
+        txtPunishment.text = extraScore.ToString();
+
+        GameController.Instance.ShowWarningPanel();
+    }
+    public void LookAt(Transform position)
+    {
+        transform.forward = position.position - transform.position;
+    }
+
+    public void Match(bool toxic)
+    {
+        StopMovement();
+        matchEnable = false;
+        fov.DisableFieldOfView();
+        popInterests.SetActive(false);
+
+        popInterests.gameObject.SetActive(false);
+
+        if (toxic)
+        {
+            partToxic.gameObject.SetActive(true);
+        }
+        else
+        {
+            partLove.gameObject.SetActive(true);
+        }
+
+        
     }
 
     private void OnDrawGizmos()
@@ -137,12 +209,9 @@ public class CatEntity : MonoBehaviour
 
 public enum InterestGroup
 {
-    A = 0,
-    B = 1,
-    C = 2,
-    D = 3,
-    E = 4,
-    F = 5
+    Food = 0,
+    Activity = 1,
+    Entertainment = 2,
 }
 public enum InterestType
 {

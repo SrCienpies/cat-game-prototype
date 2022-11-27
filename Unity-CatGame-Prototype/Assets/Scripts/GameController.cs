@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using DG.Tweening;
 
 [DefaultExecutionOrder(-100)]
 public class GameController : MonoBehaviour
@@ -10,8 +11,15 @@ public class GameController : MonoBehaviour
 
     public SO_Interest[] interests;
 
+    [Space(10)]
     public Text txtPairScore;
     public Text txtTotalScore;
+    public Image imgFade;
+
+    [Space(10)]
+    public GameObject panelTutorial;
+    public GameObject panelWarning;
+    private bool warningShowed;
 
     [Space(10)]
     public int totalMatches;
@@ -41,6 +49,14 @@ public class GameController : MonoBehaviour
         imgEvilBar.fillAmount = 0;
     }
 
+    private void Start()
+    {
+        OpenPanel(panelTutorial);
+
+        imgFade.gameObject.SetActive(true);
+        imgFade.DOFade(0, 0.5f).OnComplete(() => imgFade.gameObject.SetActive(false)).SetUpdate(true); 
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R)) SceneManager.LoadScene(0);
@@ -64,32 +80,33 @@ public class GameController : MonoBehaviour
                     score = +2;
                 }
                 else
-                {
+                { 
                     score = -2;
-                }
-            }
-            else
-            {
-                if (intA.type == intB.type)
-                {
-                    score = +1;
-                }
-                else
-                {
-                    score = -1; 
                 }
             }
 
             totalScore += score;
         }
 
+        // Is Good
         if(totalScore > 0)
         {
+            catA.Match(false);
+            catB.Match(false);
+
             imgGoodBar.fillAmount += (1 / (float) totalMatches);
         }
+        // Is bad
         else if(totalScore < 0)
         {
+            catA.Match(true);
+            catB.Match(true);
+
             imgEvilBar.fillAmount += (1 / (float) totalMatches);
+        }
+        else
+        {
+
         }
 
         //===============================================
@@ -101,6 +118,20 @@ public class GameController : MonoBehaviour
 
         txtTotalScore.text = $"Total score: {this.totalScore}";
         txtPairScore.text = $"Perfect pair: {totalScore}";
+
+        //catA.StopMovement();
+        //catB.StopMovement();
+
+        catA.LookAt(catB.transform);
+        catB.LookAt(catA.transform);
+
+        //catA.matchEnable = false;
+        //catB.matchEnable = false;
+
+        //catA.fov.DisableFieldOfView();
+        //catB.fov.DisableFieldOfView();
+
+        
     }
     public void UpdateBombPanel(int index, bool value)
     {
@@ -112,6 +143,24 @@ public class GameController : MonoBehaviour
         {
             bombIcon[index].sprite = bombEmpty;
         }
+    }
+
+    public void ShowWarningPanel()
+    {
+        if (warningShowed) return;
+
+        warningShowed = true;
+        OpenPanel(panelWarning);
+    }
+    public void OpenPanel(GameObject panel)
+    {
+        panel.gameObject.SetActive(true);
+        Time.timeScale = 0;
+    }
+    public void ClosePanel(GameObject panel)
+    {
+        panel.gameObject.SetActive(false);
+        Time.timeScale = 1;
     }
 }
 

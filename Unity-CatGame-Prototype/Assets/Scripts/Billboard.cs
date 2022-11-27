@@ -7,7 +7,7 @@ public class Billboard : MonoBehaviour
     private void Start()
     {
         transform.parent = null;
-        transform.rotation = Quaternion.Euler(0, 45, 0);
+        transform.rotation = Quaternion.Euler(45, 45, 0);
     }
 
     void Update()
