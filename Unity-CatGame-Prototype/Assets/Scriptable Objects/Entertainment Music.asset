@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   group: 2
   type: 1
-  icon: {fileID: 21300000, guid: d7828be07a67a284fa7213d553baf23f, type: 3}
+  icon: {fileID: 21300000, guid: 508d7ceea36d47e48a8238df64e36077, type: 3}
