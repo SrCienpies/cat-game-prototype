@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CatEntity : MonoBehaviour
 {
+    public Color colorPath;
     public List<SO_Interest> lstInterests;
     public SpriteRenderer[] sprInterest;
 
@@ -102,13 +103,18 @@ public class CatEntity : MonoBehaviour
     }
     public IEnumerator RoutineNoveTo(Vector3 toPosition)
     {
-        while(true)
+        while(isMovingTo)
         {
             Vector3 targetPos = new Vector3(toPosition.x, 0, toPosition.z);
 
             transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
 
-            if (toPosition - transform.position != Vector3.zero) transform.forward = targetPos - transform.position;
+            Vector3 direction = targetPos - transform.position;
+
+            if (direction != Vector3.zero)
+            {
+                transform.forward = targetPos - transform.position;
+            }
 
             yield return new WaitForEndOfFrame();
         }
@@ -125,6 +131,8 @@ public class CatEntity : MonoBehaviour
     }
     public void StopMoveTo()
     {
+        if (_routineMoveTo == null) return;
+
         isMovingTo = false;
         StopCoroutine(_routineMoveTo);
     }
@@ -146,15 +154,19 @@ public class CatEntity : MonoBehaviour
     {
         extraScore--;
 
-        SO_Interest[] aux = GameController.Instance.interests;
+        SO_Interest[] auxA = GameController.Instance.interestA;
+        SO_Interest[] auxB = GameController.Instance.interestB;
+        SO_Interest[] auxC = GameController.Instance.interestC;
 
-        aux.Shuffle();
+        auxA.Shuffle();
+        auxB.Shuffle();
+        auxC.Shuffle();
 
         lstInterests = new List<SO_Interest>();
 
-        lstInterests.Add(aux[0]);
-        lstInterests.Add(aux[1]);
-        lstInterests.Add(aux[2]);
+        lstInterests.Add(auxA[0]);
+        lstInterests.Add(auxB[0]);
+        lstInterests.Add(auxC[0]);
 
         for (int i = 0; i < lstInterests.Count; i++)
         {
@@ -173,6 +185,8 @@ public class CatEntity : MonoBehaviour
 
     public void Match(bool toxic)
     {
+        GetComponent<Rigidbody>().isKinematic = true;
+
         StopMovement();
         matchEnable = false;
         fov.DisableFieldOfView();
@@ -200,8 +214,14 @@ public class CatEntity : MonoBehaviour
         {
             for (int i = 0; i < waypoints.childCount - 1; i++)
             {
-                Gizmos.color = Color.red;
+                Gizmos.color = colorPath;
                 Gizmos.DrawLine(waypoints.GetChild(i).position, waypoints.GetChild(i + 1).position);
+            }
+
+            if (!loop && waypoints.childCount > 1)
+            {
+                Gizmos.color = colorPath;
+                Gizmos.DrawLine(waypoints.GetChild(waypoints.childCount - 1).position, waypoints.GetChild(0).position);
             }
         }
     }

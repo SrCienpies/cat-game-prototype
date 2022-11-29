@@ -9,7 +9,9 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance;
 
-    public SO_Interest[] interests;
+    public SO_Interest[] interestA;
+    public SO_Interest[] interestB;
+    public SO_Interest[] interestC;
 
     [Space(10)]
     public Text txtPairScore;
@@ -19,7 +21,10 @@ public class GameController : MonoBehaviour
     [Space(10)]
     public GameObject panelTutorial;
     public GameObject panelWarning;
+    public GameObject panelCongrats;
+
     private bool warningShowed;
+    private bool congratsShowed;
 
     [Space(10)]
     public int totalMatches;
@@ -64,6 +69,8 @@ public class GameController : MonoBehaviour
 
     public void PerfectPairing(CatEntity catA, CatEntity catB)
     {
+        ShowCongrats();
+
         int totalScore = 0;
 
         for (int i = 0; i < catA.lstInterests.Count; i++)
@@ -125,13 +132,20 @@ public class GameController : MonoBehaviour
         catA.LookAt(catB.transform);
         catB.LookAt(catA.transform);
 
-        //catA.matchEnable = false;
-        //catB.matchEnable = false;
+        //A+(B-A)/2
+        Vector3 midPoint = catA.transform.position +(catB.transform.position - catA.transform.position)/2;
 
-        //catA.fov.DisableFieldOfView();
-        //catB.fov.DisableFieldOfView();
+        Vector3 dirA = catA.transform.position - catB.transform.position;
+        Vector3 nearPosA = midPoint - dirA.normalized * 1.5f;
 
-        
+        Vector3 dirB = catB.transform.position - catA.transform.position;
+        Vector3 nearPosB = midPoint - dirB.normalized * 1.0f;
+
+        catA.StopMoveTo();
+        catB.StopMoveTo();
+
+        //catA.StartMoveTo(nearPosB);
+        //catB.StartMoveTo(nearPosA);
     }
     public void UpdateBombPanel(int index, bool value)
     {
@@ -151,6 +165,13 @@ public class GameController : MonoBehaviour
 
         warningShowed = true;
         OpenPanel(panelWarning);
+    }
+    public void ShowCongrats()
+    {
+        if (congratsShowed) return;
+
+        congratsShowed = true;
+        OpenPanel(panelCongrats);
     }
     public void OpenPanel(GameObject panel)
     {
